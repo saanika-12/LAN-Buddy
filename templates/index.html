@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LAN Buddy</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+  <!-- Connect screen -->
+  <div id="connect-screen" class="connect-screen">
+    <form id="connect-form" class="connect-card">
+      <div class="logo big"><span class="logo-icon">LB</span> LAN Buddy</div>
+      <p class="muted">Join the chat server on your network</p>
+
+      <label>Username
+        <input id="username" maxlength="20" placeholder="e.g. Rayan" required autocomplete="off">
+      </label>
+      <div class="row">
+        <label class="grow">Server IP
+          <input id="host" value="10.121.0.200" required>
+        </label>
+        <label class="port">Port
+          <input id="port" value="9999" inputmode="numeric" required>
+        </label>
+      </div>
+
+      <div id="connect-error" class="error"></div>
+      <button id="connect-btn" class="btn-primary" type="submit">Connect</button>
+    </form>
+  </div>
+
+  <!-- Main app -->
+  <div class="app">
+    <aside id="sidebar" class="sidebar">
+      <div class="logo"><span class="logo-icon">LB</span> LAN Buddy</div>
+
+      <div class="card profile">
+        <div id="avatar" class="avatar">?</div>
+        <div>
+          <div id="profile-name" class="profile-name">Guest</div>
+          <div class="muted small">Online user</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="label">Connection</div>
+        <div class="status"><span id="status-dot" class="dot"></span><span id="status-text">Disconnected</span></div>
+      </div>
+
+      <div class="card">
+        <div class="label">Server</div>
+        <div id="server-address" class="mono">not connected</div>
+      </div>
+
+      <button id="leave-btn" class="btn-danger">Disconnect</button>
+    </aside>
+
+    <main id="chat" class="chat">
+      <header class="chat-header">
+        <button id="menu-btn" class="menu-btn" aria-label="Menu">☰</button>
+        <span class="hash">#</span> general
+      </header>
+
+      <div id="messages" class="messages"></div>
+
+      <form id="message-form" class="composer">
+        <input id="message-input" placeholder="Type a message..." autocomplete="off" disabled>
+        <button id="send-btn" class="btn-primary" type="submit" disabled>Send</button>
+      </form>
+    </main>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

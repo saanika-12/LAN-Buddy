@@ -1,110 +1,47 @@
-# LAN Buddy – Python Client-Server Chat Application
+# LAN Buddy
 
-## Project Overview
+A modern dark-themed web chat built on Python TCP sockets.
 
-LAN Buddy is a simple two-way text chat application developed using Python socket programming. It allows two computers connected through the same network to communicate with each other using a client-server architecture.
+**Stack:** Python, Flask, TCP sockets, HTML, CSS, JavaScript
 
-One computer acts as the server, while another connects as the client.
+## How it works
 
-## Objectives
-
-- Understand client-server architecture.
-- Learn socket programming in Python.
-- Understand IP addresses and port numbers.
-- Establish TCP connections.
-- Exchange messages between two computers.
-- Understand basic network communication.
-
-## Technologies Used
-
-- Python 3
-- TCP/IP
-- Socket Programming
-- Threading
-- Visual Studio Code
-
-## Features
-
-- Two-way text communication.
-- Client-server architecture.
-- TCP-based communication.
-- IP address and port configuration.
-- Simultaneous sending and receiving.
-- Graceful disconnection.
-
-## Project Structure
-
-```text
-LAN-Buddy/
-│
-├── server.py
-├── client.py
-├── README.md
-├── requirements.txt
-├── .gitignore
-└── screenshots/
+```
+Browser ──HTTP/JSON──► app.py (Flask) ──TCP──► server.py ◄──TCP── client.py
 ```
 
-## How to Run
+- `server.py`: TCP chat server that broadcasts messages to everyone
+- `client.py`: terminal chat client
+- `app.py`: Flask app that opens a TCP socket for each web user
+- `templates/` and `static/`: the web interface
 
-### 1. Clone the repository
+## Setup
 
 ```bash
-git clone YOUR_REPOSITORY_URL
+python -m venv venv
+venv\Scripts\activate        # Windows
+source venv/bin/activate     # macOS / Linux
+pip install -r requirements.txt
 ```
 
-### 2. Open the project folder
+## Run
+
+Open three terminals in the project folder:
 
 ```bash
-cd LAN-Buddy
+python server.py     # 1. TCP chat server (port 9999)
+python app.py        # 2. Web app (port 5000)
+python client.py     # 3. optional terminal client
 ```
 
-### 3. Start the server
+Then open http://127.0.0.1:5000 in your browser.
 
-```bash
-python server.py
-```
+## Using it over a LAN
 
-### 4. Start the client
+1. Run `server.py` on one computer and find its LAN IP (`ipconfig` or `ifconfig`).
+2. On other computers, run `app.py` and enter that IP on the connect screen.
+3. Allow Python through the firewall if asked.
 
-Open another terminal and execute:
+## Screenshots
 
-```bash
-python client.py
-```
-
-### 5. Enter the server IP address
-
-For testing on the same computer, enter:
-
-```text
-127.0.0.1
-```
-
-For communication between two computers, enter the server computer's local IP address.
-
-## Working
-
-1. The server creates a TCP socket.
-2. The server binds to an IP address and port number.
-3. The server listens for incoming connections.
-4. The client creates a socket and connects to the server.
-5. Both sides exchange messages.
-6. Threading allows messages to be received in the background while typing.
-7. The connection closes when a user enters the exit command.
-
-## Expected Output
-
-A successful connection between the client and server, followed by two-way text message exchange.
-
-## Learning Outcomes
-
-This project demonstrates basic client-server communication, socket creation, TCP connection establishment, and message transmission over a network.
-
-## Developed By
-
-Add your team members' names and USNs here.
-
-## License
-
-This project is developed for educational purposes.
+Add images to the `screenshots/` folder and link them here.

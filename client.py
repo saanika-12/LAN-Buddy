@@ -1,77 +1,53 @@
-
+import os
 import socket
 import threading
 
-HOST = input("Enter server IP address: ")
-PORT = 5000
-
-client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-client.connect((HOST, PORT))
-
-print("================================")
-print("        LAN BUDDY CLIENT")
-print("================================")
-print("Connected to server!")
-print("Start chatting. Type 'exit' to quit.")
-print("--------------------------------")
-
-stop_event = threading.Event()
+HOST = "127.0.0.1"   # change to the server's LAN IP to chat across computers
+PORT = 9999
 
 
-def receive_messages():
-    while not stop_event.is_set():
-        try:
-            data = client.recv(1024)
-
-            if not data:
-                print("\nServer disconnected.")
-                break
-
-            message = data.decode()
-
-            if message.lower() == "exit":
-                print("\nServer left the chat.")
-                break
-
-            print("\nServer:", message)
-
-        except OSError:
-            break
-
-    stop_event.set()
+def receive(sock):
+    """Print every message the server sends us."""
+    reader = sock.makefile("r", encoding="utf-8")
+    for line in reader:
+        parts = line.rstrip("\n").split("|", 2)
+        if len(parts) < 3:
+            continue
+        kind, sender, text = parts
+        if kind == "MSG":
+            print(f"\n[{sender}] {text}")
+        else:
+            print(f"\n* {text}")
+    print("\nDisconnected from server. Press Enter to exit.")
+    os._exit(0)  # stop the program even though input() is waiting
 
 
-thread = threading.Thread(
-    target=receive_messages,
-    daemon=True
-)
-
-thread.start()
-
-try:
-    while not stop_event.is_set():
-        message = input("You: ")
-
-        if stop_event.is_set():
-            break
-
-        client.sendall(message.encode())
-
-        if message.lower() == "exit":
-            break
-
-except (OSError, EOFError):
-    print("\nConnection ended.")
-
-finally:
-    stop_event.set()
+def main():
+    username = input("Choose a username: ").strip()
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     try:
-        client.shutdown(socket.SHUT_RDWR)
+        sock.connect((HOST, PORT))
     except OSError:
-        pass
+        print(f"Could not connect to {HOST}:{PORT}. Is server.py running?")
+        return
 
-    client.close()
+    sock.sendall((username + "\n").encode("utf-8"))
+    threading.Thread(target=receive, args=(sock,), daemon=True).start()
 
-    print("Disconnected from server.")
+    print("Connected! Type a message and press Enter. Type /quit to leave.")
+    while True:
+        try:
+            text = input()
+        except (EOFError, KeyboardInterrupt):
+            break
+        if text == "/quit":
+            break
+        if text:
+            sock.sendall((text + "\n").encode("utf-8"))
+
+    sock.close()
+
+
+if __name__ == "__main__":
+    main()
